@@ -1,16 +1,20 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      release_ref:
+        description: Existing semantic-version release tag (for example v0.1.0)
+        required: true
+        type: string
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.release_ref }}
   cancel-in-progress: false
 
 env:
   IMAGE_NAME: docker.io/piphinetwork/piphi-network-pfsense
+  RELEASE_REF: ${{ inputs.release_ref }}
 
 jobs:
   verify-and-package:
@@ -21,6 +25,9 @@ jobs:
     steps:
       - name: Check out release tag
         uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_REF }}
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -40,7 +47,7 @@ jobs:
         run: pdm install -G dev --frozen-lockfile
 
       - name: Validate release versions
-        run: pdm run python scripts/check_release.py "${GITHUB_REF_NAME}"
+        run: pdm run python scripts/check_release.py "${RELEASE_REF}"
 
       - name: Run backend verification
         run: |
@@ -64,7 +71,7 @@ jobs:
 
       - name: Assemble release assets
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${RELEASE_REF#v}"
           mkdir -p release
           cp dist/* release/
           tar \
@@ -94,6 +101,9 @@ jobs:
     steps:
       - name: Check out release tag
         uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_REF }}
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -114,9 +124,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
+            type=semver,pattern={{version}},value=${{ env.RELEASE_REF }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_REF }}
+            type=raw,value=latest,enable=${{ !contains(env.RELEASE_REF, '-') }}
 
       - name: Build and push image
         id: build
@@ -155,7 +165,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" release/* \
+          gh release create "${RELEASE_REF}" release/* \
             --verify-tag \
             --generate-notes \
-            --title "PiPhi Network pfSense ${GITHUB_REF_NAME}"
+            --title "PiPhi Network pfSense ${RELEASE_REF}"

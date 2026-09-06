@@ -146,18 +146,21 @@ the pfSense filesystem.
 
 ## Releases
 
-Push a semantic version tag such as `v0.1.0` to run the release workflow. The
-tag must match `manifest.json`, `pyproject.toml`, the runtime version constant,
-the Docker Hub image reference, and both widget package/manifest versions. A passing
-release publishes multi-platform `linux/amd64` and `linux/arm64` images to
+Create and push a semantic version tag such as `v0.1.0`, then dispatch the
+Release workflow from `main` with that tag as `release_ref`. Running the
+workflow from `main` matches the Docker Hub OIDC trust policy, while every
+build and verification step checks out the immutable tag. The tag must match
+`manifest.json`, `pyproject.toml`, the runtime version constant, the Docker Hub
+image reference, and both widget package/manifest versions. A passing release
+publishes multi-platform `linux/amd64` and `linux/arm64` images to
 `piphinetwork/piphi-network-pfsense`, generates provenance and an SBOM, and
 creates a GitHub Release containing Python distributions, the packaged
 integration, and SHA-256 checksums.
 
 Docker Hub authentication uses its GitHub Actions OIDC connection. Configure
-the repository variable `DOCKERHUB_OIDC_CONNECTIONID` with the connection ID
-for the `piphinetwork` organization; the workflow does not use a Docker Hub
-password or long-lived access token.
+the organization variable `DOCKERHUB_OIDC_CONNECTIONID` with visibility for
+this repository and the connection ID for the `piphinetwork` organization; the
+workflow does not use a Docker Hub password or long-lived access token.
 
 ## Upstream status
 

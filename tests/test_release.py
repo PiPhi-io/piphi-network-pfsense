@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CHECK_RELEASE = ROOT / "scripts" / "check_release.py"
+RELEASE_WORKFLOW = ROOT / ".github/workflows/release.yml"
 
 
 def test_current_release_metadata_is_consistent() -> None:
@@ -31,3 +32,12 @@ def test_release_check_rejects_a_mismatched_tag() -> None:
     )
     assert result.returncode != 0
     assert "does not match release metadata" in result.stderr
+
+
+def test_release_dispatch_runs_from_main_but_builds_the_tag() -> None:
+    workflow = RELEASE_WORKFLOW.read_text()
+
+    assert "workflow_dispatch:" in workflow
+    assert "release_ref:" in workflow
+    assert "ref: refs/tags/${{ env.RELEASE_REF }}" in workflow
+    assert 'pdm run python scripts/check_release.py "${RELEASE_REF}"' in workflow
