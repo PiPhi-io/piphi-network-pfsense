@@ -97,6 +97,7 @@ jobs:
     permissions:
       contents: read
       attestations: write
+      artifact-metadata: write
       id-token: write
     steps:
       - name: Check out release tag

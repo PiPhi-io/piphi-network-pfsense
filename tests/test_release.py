@@ -41,3 +41,4 @@ def test_release_dispatch_runs_from_main_but_builds_the_tag() -> None:
     assert "release_ref:" in workflow
     assert "ref: refs/tags/${{ env.RELEASE_REF }}" in workflow
     assert 'pdm run python scripts/check_release.py "${RELEASE_REF}"' in workflow
+    assert "artifact-metadata: write" in workflow
