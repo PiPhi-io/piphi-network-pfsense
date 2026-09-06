@@ -1,0 +1,38 @@
+{
+  "id": "io.piphi.pfsense.overview",
+  "name": "pfSense overview",
+  "version": "0.1.0",
+  "entry": "./dist/widget.js",
+  "binding_modes": ["read"],
+  "value_kinds": ["numeric", "boolean", "text"],
+  "capability_requirements": [
+    "connected",
+    "cpu_usage_percent",
+    "memory_usage_percent",
+    "gateways_online",
+    "gateways_offline",
+    "services_down",
+    "vpn_tunnels_up"
+  ],
+  "sdk_compatibility": {"minimum": "0.3.0"},
+  "conformance": {
+    "accessibility": "wcag2.2-aa",
+    "keyboard": true,
+    "themes": ["light", "dark"],
+    "directions": ["ltr", "rtl"],
+    "states": ["loading", "live", "stale", "offline", "reconnecting", "denied", "error"]
+  },
+  "settings_schema_version": "1",
+  "settings": [
+    {"id": "title", "type": "text", "label": "Title", "default": "Firewall overview"},
+    {"id": "firewall", "type": "device", "label": "Firewall", "required": true}
+  ],
+  "layout": {"min_height": 220, "default_height": 320, "max_height": 520},
+  "previews": {"light": "./previews/light.svg", "dark": "./previews/dark.svg"},
+  "translations": {
+    "en": {"widget.title": "Firewall overview", "widget.waiting": "Waiting for pfSense data"},
+    "es": {"widget.title": "Resumen del firewall", "widget.waiting": "Esperando datos de pfSense"},
+    "ar": {"widget.title": "نظرة عامة على جدار الحماية", "widget.waiting": "في انتظار بيانات pfSense"}
+  },
+  "security": {"permissions": [], "sandbox": ["allow-scripts"], "csp": {"connect_src": []}}
+}

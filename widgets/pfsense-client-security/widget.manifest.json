@@ -1,0 +1,28 @@
+{
+  "id": "io.piphi.pfsense.client-security",
+  "name": "pfSense clients and security",
+  "version": "0.1.0",
+  "entry": "./dist/widget.js",
+  "binding_modes": ["read"],
+  "value_kinds": ["numeric", "boolean", "text"],
+  "capability_requirements": ["client_count", "clients_online", "certificates_expiring", "certificates_expired", "security_log_count", "ha_enabled"],
+  "sdk_compatibility": {"minimum": "0.3.0"},
+  "conformance": {
+    "accessibility": "wcag2.2-aa", "keyboard": true,
+    "themes": ["light", "dark"], "directions": ["ltr", "rtl"],
+    "states": ["loading", "live", "stale", "offline", "reconnecting", "denied", "error"]
+  },
+  "settings_schema_version": "1",
+  "settings": [
+    {"id": "title", "type": "text", "label": "Title", "default": "Clients and security"},
+    {"id": "firewall", "type": "device", "label": "Firewall", "required": true}
+  ],
+  "layout": {"min_height": 240, "default_height": 380, "max_height": 650},
+  "previews": {"light": "./previews/light.svg", "dark": "./previews/dark.svg"},
+  "translations": {
+    "en": {"widget.title": "Clients and security", "widget.waiting": "Waiting for inventory"},
+    "es": {"widget.title": "Clientes y seguridad", "widget.waiting": "Esperando el inventario"},
+    "ar": {"widget.title": "العملاء والأمان", "widget.waiting": "في انتظار قائمة الأجهزة"}
+  },
+  "security": {"permissions": [], "sandbox": ["allow-scripts"], "csp": {"connect_src": []}}
+}

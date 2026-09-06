@@ -1,0 +1,15 @@
+{
+  "name": "pfsense-client-security",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "mkdir -p dist && cp src/widget.js dist/widget.js",
+    "dev": "piphi-widget dev",
+    "validate": "piphi-widget validate",
+    "conformance": "npm run build && piphi-widget conformance",
+    "test": "node --test test/*.test.mjs",
+    "pack": "piphi-widget pack"
+  },
+  "dependencies": {"piphi-network-widget-sdk": "^0.3.0"}
+}
