@@ -17,14 +17,21 @@ router = APIRouter(tags=["discovery"])
 @router.post("/discover")
 async def discover(payload: IntegrationDiscoveryRequest | None = None) -> Any:
     inputs = normalize_discovery_inputs(payload.inputs if payload else None)
+    simulated = bool(inputs.get("simulation_mode"))
+    host = (
+        "simulated-pfsense.local"
+        if simulated
+        else str(inputs.get("host") or "pfsense.local")
+    )
     return build_discovery_response(
         [
             {
-                "id": str(inputs.get("host") or "pfsense-firewall"),
-                "device_id": str(inputs.get("host") or "pfsense-firewall"),
-                "host": inputs.get("host", "pfsense.local"),
-                "alias": "pfSense Firewall",
-                "discovery_method": "user_supplied_host",
+                "id": host,
+                "device_id": host,
+                "host": host,
+                "alias": "Simulated pfSense Home" if simulated else "pfSense Firewall",
+                "simulation_mode": simulated,
+                "discovery_method": "simulator" if simulated else "user_supplied_host",
             }
         ]
     )

@@ -94,6 +94,12 @@ Configure the runtime through `POST /config`:
 }
 ```
 
+For dashboard development, set `simulation_mode` to `true`. Host and API key are
+then optional and the runtime supplies deterministic firewall, interface,
+gateway, VPN, client, certificate, HA, and security-log data. The simulator only
+replaces the pfREST transport; state projection, entity generation, telemetry,
+events, allow-list checks, actions, and widgets use the production code paths.
+
 `host` accepts a hostname or IP address, not a URL. HTTPS and certificate
 verification are enabled by default. For an internal CA, mount its PEM bundle
 into the container and set `ca_bundle_path`. HTTP requires both `scheme=http`
@@ -138,7 +144,7 @@ access.
 ## Container
 
 ```bash
-docker build -t piphinetwork/piphi-network-pfsense:0.1.0 .
+docker build -t piphinetwork/piphi-network-pfsense:0.1.3 .
 ```
 
 The container does not require host networking, privileged mode, or access to

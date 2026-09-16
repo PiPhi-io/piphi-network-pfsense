@@ -64,3 +64,14 @@ Optional client inventory merges DHCP and ARP observations into child entities.
 Log events are content-hash deduplicated after a silent initial baseline.
 Certificate alerts fire as a certificate crosses 30, 14, 7, 1, and 0 days.
 CARP virtual IP child entities report primary/backup role transitions.
+
+`simulation_mode=true` replaces only the pfREST client and accepts an empty
+host/API key. Its snapshots flow through the same normalization, entity,
+telemetry, transition, action allow-list, and widget contracts as live data.
+
+The pfSense overview widget is the integration-owned aggregate for firewall
+resources, gateways, services, and VPN status. The clients/security widget owns
+the cross-capability inventory and certificate/log summary. Core-owned stat,
+gauge, line-chart, status-list, tile, and button cards remain available for
+individual capabilities and actions; the integration does not duplicate those
+generic cards.

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from fastapi import APIRouter, Request
@@ -45,6 +46,7 @@ async def configure(payload: DeviceConfig, request: Request) -> Any:
             "alias": payload.alias,
             "api": "pfrest-v2",
             "read_only": True,
+            "simulation_mode": payload.simulation_mode,
         },
     )
 
@@ -54,7 +56,15 @@ async def sync_config(snapshot: RuntimeConfigSnapshot, request: Request) -> Any:
     runtime.auth.sync_from_headers(
         request.headers, payload_container_id=snapshot.container_id
     )
-    typed_configs = validate_typed_configs(snapshot.configs, DeviceConfig)
+    # RuntimeConfigSnapshot intentionally parses entries as the SDK base model.
+    # Rehydrate their complete payloads before applying the integration schema.
+    config_payloads: list[Mapping[str, Any]] = [
+        value.model_dump() for value in snapshot.configs
+    ]
+    typed_configs: list[DeviceConfig] = validate_typed_configs(
+        config_payloads,
+        DeviceConfig,
+    )
     return await config_sync.apply_snapshot(
         snapshot=snapshot.model_copy(update={"configs": typed_configs}),
         active_config_ids=registry.ids(),

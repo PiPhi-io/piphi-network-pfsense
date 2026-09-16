@@ -71,6 +71,7 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
     "vpn_peer_count": _sensor("peers", "stat"),
     "client_count": _sensor("clients", "stat"),
     "clients_online": _sensor("clients", "stat", "status-list"),
+    "clients": _sensor("json"),
     "client_online": _sensor("bool", "tile", "status-list"),
     "certificate_count": _sensor("certificates", "stat"),
     "certificates_expiring": _sensor("certificates", "stat", "status-list"),
@@ -85,23 +86,23 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
     "security_log_count": _sensor("entries", "stat"),
     "refresh": {
         "kind": "action",
-        "dashboard": {"allowed_widgets": ["button"], "default_widget": "button"},
+        "dashboard": {"allowed_widgets": ["tile"], "default_widget": "tile"},
     },
     "diagnostic_ping": {
         "kind": "action",
-        "dashboard": {"allowed_widgets": ["button"], "default_widget": "button"},
+        "dashboard": {"allowed_widgets": ["tile"], "default_widget": "tile"},
     },
     "restart_service": {
         "kind": "action",
-        "dashboard": {"allowed_widgets": ["button"], "default_widget": "button"},
+        "dashboard": {"allowed_widgets": ["tile"], "default_widget": "tile"},
     },
     "start_service": {
         "kind": "action",
-        "dashboard": {"allowed_widgets": ["button"], "default_widget": "button"},
+        "dashboard": {"allowed_widgets": ["tile"], "default_widget": "tile"},
     },
     "wake_on_lan": {
         "kind": "action",
-        "dashboard": {"allowed_widgets": ["button"], "default_widget": "button"},
+        "dashboard": {"allowed_widgets": ["tile"], "default_widget": "tile"},
     },
 }
 
@@ -132,9 +133,13 @@ CONFIG_SCHEMA: dict[str, Any] = {
     "schema": {
         "title": "pfSense REST API Setup",
         "type": "object",
-        "required": ["host", "api_key"],
+        "required": [],
         "properties": {
-            "host": {"type": "string", "title": "pfSense hostname or IP"},
+            "host": {
+                "type": "string",
+                "title": "pfSense hostname or IP",
+                "default": "simulated-pfsense.local",
+            },
             "alias": {
                 "type": "string",
                 "title": "Display name",
@@ -248,6 +253,11 @@ CONFIG_SCHEMA: dict[str, Any] = {
                     },
                 },
             },
+            "simulation_mode": {
+                "type": "boolean",
+                "title": "Use simulated pfSense firewall",
+                "default": False,
+            },
         },
     },
     "uiSchema": {
@@ -258,6 +268,9 @@ CONFIG_SCHEMA: dict[str, Any] = {
         "allowed_ping_hosts": {"ui:options": {"orderable": False}},
         "allowed_services": {"ui:options": {"orderable": False}},
         "wake_on_lan_targets": {"ui:options": {"orderable": False}},
+        "simulation_mode": {
+            "ui:help": "Developer mode: use deterministic firewall, gateway, VPN, client, certificate, and HA data without contacting pfSense."
+        },
     },
 }
 

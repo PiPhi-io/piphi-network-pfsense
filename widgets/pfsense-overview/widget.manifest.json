@@ -1,7 +1,7 @@
 {
   "id": "io.piphi.pfsense.overview",
-  "name": "pfSense overview",
-  "version": "0.1.0",
+  "name": "pfSense Internet & Router",
+  "version": "0.1.3",
   "entry": "./dist/widget.js",
   "binding_modes": ["read"],
   "value_kinds": ["numeric", "boolean", "text"],
@@ -24,13 +24,13 @@
   },
   "settings_schema_version": "1",
   "settings": [
-    {"id": "title", "type": "text", "label": "Title", "default": "Firewall overview"},
-    {"id": "firewall", "type": "device", "label": "Firewall", "required": true}
+    {"id": "title", "type": "text", "label": "Title", "default": "Internet & router"},
+    {"id": "firewall", "type": "device", "label": "Router", "required": true}
   ],
-  "layout": {"min_height": 220, "default_height": 320, "max_height": 520},
+  "layout": {"transparent": true, "min_height": 120, "default_height": 160, "max_height": 260},
   "previews": {"light": "./previews/light.svg", "dark": "./previews/dark.svg"},
   "translations": {
-    "en": {"widget.title": "Firewall overview", "widget.waiting": "Waiting for pfSense data"},
+    "en": {"widget.title": "Internet & router", "widget.waiting": "Waiting for router data"},
     "es": {"widget.title": "Resumen del firewall", "widget.waiting": "Esperando datos de pfSense"},
     "ar": {"widget.title": "نظرة عامة على جدار الحماية", "widget.waiting": "في انتظار بيانات pfSense"}
   },

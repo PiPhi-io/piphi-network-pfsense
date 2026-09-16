@@ -38,8 +38,8 @@ class WakeOnLanTarget(BaseModel):
 class DeviceConfig(RuntimeConfig):
     """Connection settings for one pfSense firewall."""
 
-    host: str
-    api_key: SecretStr
+    host: str = ""
+    api_key: SecretStr = SecretStr("")
     alias: str | None = "pfSense Firewall"
     port: int = Field(default=443, ge=1, le=65535)
     scheme: Literal["https", "http"] = "https"
@@ -59,13 +59,12 @@ class DeviceConfig(RuntimeConfig):
     allowed_services: list[str] = Field(default_factory=list)
     enable_wake_on_lan: bool = False
     wake_on_lan_targets: list[WakeOnLanTarget] = Field(default_factory=list)
+    simulation_mode: bool = False
 
     @field_validator("host")
     @classmethod
     def normalize_host(cls, value: str) -> str:
         normalized = value.strip().rstrip("/")
-        if not normalized:
-            raise ValueError("host must not be empty")
         if "/" in normalized or "://" in normalized:
             raise ValueError("host must be a hostname or IP address, not a URL")
         return normalized
@@ -91,6 +90,10 @@ class DeviceConfig(RuntimeConfig):
 
     @model_validator(mode="after")
     def validate_transport_security(self) -> DeviceConfig:
+        if not self.simulation_mode and not self.host:
+            raise ValueError("host is required unless simulation mode is enabled")
+        if not self.simulation_mode and not self.secret_api_key().strip():
+            raise ValueError("api_key is required unless simulation mode is enabled")
         if self.scheme == "http" and self.verify_tls:
             raise ValueError("verify_tls must be false when scheme is http")
         if self.ca_bundle_path and not self.verify_tls:
@@ -116,6 +119,8 @@ class DeviceConfig(RuntimeConfig):
 
     @property
     def base_url(self) -> str:
+        if self.simulation_mode:
+            return "simulator://pfsense"
         default_port = 443 if self.scheme == "https" else 80
         suffix = "" if self.port == default_port else f":{self.port}"
         return f"{self.scheme}://{self.host}{suffix}"

@@ -3,7 +3,7 @@
   "manifest_version": "1.0",
   "id": "piphi-network-pfsense",
   "name": "PiPhi Network pfSense",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "pfSense monitoring, transition events, and opt-in allow-listed operations for PiPhi Network.",
   "metadata": {
     "generator": "piphi-network-create",
@@ -101,7 +101,7 @@
     "website": "https://piphi.io"
   },
   "license": "Apache-2.0",
-  "image": "piphinetwork/piphi-network-pfsense:0.1.0",
+  "image": "piphinetwork/piphi-network-pfsense:0.1.3",
   "platforms": [
     "linux"
   ],
@@ -109,7 +109,7 @@
     "linux": {
       "type": "container",
       "container": {
-        "image": "piphinetwork/piphi-network-pfsense:0.1.0",
+        "image": "piphinetwork/piphi-network-pfsense:0.1.3",
         "ports": [
           {
             "container": 8090,
@@ -185,7 +185,8 @@
       "enable_service_start",
       "allowed_services",
       "enable_wake_on_lan",
-      "wake_on_lan_targets"
+      "wake_on_lan_targets",
+      "simulation_mode"
     ],
     "secret_fields": [
       "api_key"
@@ -245,6 +246,7 @@
     "vpn_peer_count": {"kind": "sensor", "unit": "peers"},
     "client_count": {"kind": "sensor", "unit": "clients"},
     "clients_online": {"kind": "sensor", "unit": "clients"},
+    "clients": {"kind": "sensor", "unit": "json"},
     "client_online": {"kind": "sensor", "unit": "bool"},
     "certificate_count": {"kind": "sensor", "unit": "certificates"},
     "certificates_expiring": {"kind": "sensor", "unit": "certificates"},
@@ -310,6 +312,7 @@
         "vpn_tunnels_up",
         "client_count",
         "clients_online",
+        "clients",
         "certificates_expiring",
         "certificates_expired",
         "ha_enabled",
@@ -355,7 +358,7 @@
           "gauge",
           "line-chart",
           "stat",
-          "button"
+          "tile"
           ,"external-widget"
         ],
         "default_widget": "status-list"
@@ -366,8 +369,8 @@
     "widget_packages": [
       {
         "id": "io.piphi.pfsense.overview",
-        "name": "pfSense overview",
-        "version": "0.1.0",
+        "name": "pfSense Internet & Router",
+        "version": "0.1.3",
         "entry": "/widgets/pfsense-overview/dist/widget.js",
         "runtime": "prebuilt_bundle",
         "host_bridge": {
@@ -386,7 +389,7 @@
           "services_down",
           "vpn_tunnels_up"
         ],
-        "layout": {"min_height": 220, "default_height": 320, "max_height": 520},
+        "layout": {"transparent": true, "min_height": 120, "default_height": 160, "max_height": 260},
         "security": {
           "permissions": [],
           "sandbox": ["allow-scripts"],
@@ -395,8 +398,8 @@
       },
       {
         "id": "io.piphi.pfsense.client-security",
-        "name": "pfSense clients and security",
-        "version": "0.1.0",
+        "name": "pfSense Devices & Security",
+        "version": "0.1.3",
         "entry": "/widgets/pfsense-client-security/dist/widget.js",
         "runtime": "prebuilt_bundle",
         "host_bridge": {
@@ -405,12 +408,12 @@
           "events": ["ready", "resize"]
         },
         "binding_modes": ["read"],
-        "value_kinds": ["numeric", "boolean", "text"],
+        "value_kinds": ["numeric", "boolean", "text", "json"],
         "capability_requirements": [
           "client_count", "clients_online", "certificates_expiring",
-          "certificates_expired", "security_log_count", "ha_enabled"
+          "certificates_expired", "security_log_count", "ha_enabled", "clients"
         ],
-        "layout": {"min_height": 240, "default_height": 380, "max_height": 650},
+        "layout": {"transparent": true, "min_height": 120, "default_height": 160, "max_height": 260},
         "security": {
           "permissions": [],
           "sandbox": ["allow-scripts"],

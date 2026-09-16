@@ -97,6 +97,7 @@ def make_entry(config: DeviceConfig) -> dict[str, Any]:
         "alias": config.alias,
         "connection": {
             "base_url": config.base_url,
+            "simulation_mode": config.simulation_mode,
             "verify_tls": config.verify_tls,
             "custom_ca": bool(config.ca_bundle_path),
             "collect_dhcp_leases": config.collect_dhcp_leases,

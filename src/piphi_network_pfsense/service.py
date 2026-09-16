@@ -17,6 +17,7 @@ from piphi_runtime_kit_python import (
 
 from .pfsense_client import PfRestV2Client, PfSenseClient, PfSenseSnapshot
 from .schemas import DeviceConfig
+from .simulator import SimulatedPfSenseClient
 
 
 @dataclass(slots=True)
@@ -35,6 +36,13 @@ class ActiveFirewall:
 ClientFactory = Callable[[DeviceConfig], PfSenseClient]
 
 
+def default_client_factory(config: DeviceConfig) -> PfSenseClient:
+    """Select only the transport; simulation and live share all projection logic."""
+    if config.simulation_mode:
+        return SimulatedPfSenseClient(config)
+    return PfRestV2Client(config)
+
+
 class PfSenseRuntimeService:
     """Owns reusable pfSense clients, polling tasks, and state projection."""
 
@@ -46,7 +54,7 @@ class PfSenseRuntimeService:
         telemetry: Any,
         event_client: Any | None = None,
         record_event: Callable[[dict[str, Any]], Any] | None = None,
-        client_factory: ClientFactory = PfRestV2Client,
+        client_factory: ClientFactory = default_client_factory,
     ) -> None:
         self.registry = registry
         self.runtime = runtime

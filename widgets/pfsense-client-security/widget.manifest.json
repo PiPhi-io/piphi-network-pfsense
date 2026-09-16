@@ -1,11 +1,11 @@
 {
   "id": "io.piphi.pfsense.client-security",
-  "name": "pfSense clients and security",
-  "version": "0.1.0",
+  "name": "pfSense Devices & Security",
+  "version": "0.1.3",
   "entry": "./dist/widget.js",
   "binding_modes": ["read"],
-  "value_kinds": ["numeric", "boolean", "text"],
-  "capability_requirements": ["client_count", "clients_online", "certificates_expiring", "certificates_expired", "security_log_count", "ha_enabled"],
+  "value_kinds": ["numeric", "boolean", "text", "json"],
+  "capability_requirements": ["client_count", "clients_online", "certificates_expiring", "certificates_expired", "security_log_count", "ha_enabled", "clients"],
   "sdk_compatibility": {"minimum": "0.3.0"},
   "conformance": {
     "accessibility": "wcag2.2-aa", "keyboard": true,
@@ -14,13 +14,13 @@
   },
   "settings_schema_version": "1",
   "settings": [
-    {"id": "title", "type": "text", "label": "Title", "default": "Clients and security"},
-    {"id": "firewall", "type": "device", "label": "Firewall", "required": true}
+    {"id": "title", "type": "text", "label": "Title", "default": "Devices & security"},
+    {"id": "firewall", "type": "device", "label": "Router", "required": true}
   ],
-  "layout": {"min_height": 240, "default_height": 380, "max_height": 650},
+  "layout": {"transparent": true, "min_height": 120, "default_height": 160, "max_height": 260},
   "previews": {"light": "./previews/light.svg", "dark": "./previews/dark.svg"},
   "translations": {
-    "en": {"widget.title": "Clients and security", "widget.waiting": "Waiting for inventory"},
+    "en": {"widget.title": "Devices & security", "widget.waiting": "Waiting for device data"},
     "es": {"widget.title": "Clientes y seguridad", "widget.waiting": "Esperando el inventario"},
     "ar": {"widget.title": "العملاء والأمان", "widget.waiting": "في انتظار قائمة الأجهزة"}
   },
