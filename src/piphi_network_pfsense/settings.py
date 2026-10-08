@@ -4,7 +4,7 @@ import os
 
 INTEGRATION_ID = "piphi-network-pfsense"
 INTEGRATION_NAME = "PiPhi Network pfSense"
-INTEGRATION_VERSION = "0.1.3"
+INTEGRATION_VERSION = "0.1.8"
 PROJECT_KIND = "integration"
 PROJECT_PRESET = "cloud-polling-api"
 PROJECT_DOMAIN = "local-device"

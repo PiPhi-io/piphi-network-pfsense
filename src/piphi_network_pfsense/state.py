@@ -409,3 +409,11 @@ def _action_context(
 
 
 assert_behaviors_contract(BEHAVIORS, automations)
+
+
+async def _refresh_all_state() -> None:
+    for config_id in registry.ids():
+        await pfsense_service.refresh(config_id)
+
+
+starter.state.provide(_refresh_all_state, source=INTEGRATION_ID)

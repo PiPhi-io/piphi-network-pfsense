@@ -3,7 +3,7 @@
   "manifest_version": "1.0",
   "id": "piphi-network-pfsense",
   "name": "PiPhi Network pfSense",
-  "version": "0.1.3",
+  "version": "0.1.8",
   "description": "pfSense monitoring, transition events, and opt-in allow-listed operations for PiPhi Network.",
   "metadata": {
     "generator": "piphi-network-create",
@@ -101,7 +101,7 @@
     "website": "https://piphi.io"
   },
   "license": "Apache-2.0",
-  "image": "piphinetwork/piphi-network-pfsense:0.1.3",
+  "image": "piphinetwork/piphi-network-pfsense:0.1.8",
   "platforms": [
     "linux"
   ],
@@ -109,7 +109,7 @@
     "linux": {
       "type": "container",
       "container": {
-        "image": "piphinetwork/piphi-network-pfsense:0.1.3",
+        "image": "piphinetwork/piphi-network-pfsense:0.1.8",
         "ports": [
           {
             "container": 8090,
@@ -370,9 +370,23 @@
       {
         "id": "io.piphi.pfsense.overview",
         "name": "pfSense Internet & Router",
-        "version": "0.1.3",
+        "version": "0.1.8",
         "entry": "/widgets/pfsense-overview/dist/widget.js",
         "runtime": "prebuilt_bundle",
+        "certification": {
+          "verified_gates": ["runtime", "persistence", "binding", "states", "responsive", "themes", "accessibility", "save-reload", "performance"],
+          "evidence": {
+            "runtime": ["core-profile:sandbox-host-v1/runtime"],
+            "persistence": ["core-profile:sandbox-host-v1/persistence"],
+            "binding": ["widgets/pfsense-overview/test/widget.test.mjs"],
+            "states": ["widgets/pfsense-overview/test/widget.test.mjs"],
+            "responsive": ["widgets/pfsense-overview/test/widget.test.mjs"],
+            "themes": ["widgets/pfsense-overview/test/widget.test.mjs"],
+            "accessibility": ["widgets/pfsense-overview/test/widget.test.mjs"],
+            "save-reload": ["core-profile:sandbox-host-v1/save-reload"],
+            "performance": ["core-profile:sandbox-host-v1/performance"]
+          }
+        },
         "host_bridge": {
           "protocol": "piphi.widget.host",
           "version": "1",
@@ -399,9 +413,23 @@
       {
         "id": "io.piphi.pfsense.client-security",
         "name": "pfSense Devices & Security",
-        "version": "0.1.3",
+        "version": "0.1.8",
         "entry": "/widgets/pfsense-client-security/dist/widget.js",
         "runtime": "prebuilt_bundle",
+        "certification": {
+          "verified_gates": ["runtime", "persistence", "binding", "states", "responsive", "themes", "accessibility", "save-reload", "performance"],
+          "evidence": {
+            "runtime": ["core-profile:sandbox-host-v1/runtime"],
+            "persistence": ["core-profile:sandbox-host-v1/persistence"],
+            "binding": ["widgets/pfsense-client-security/test/widget.test.mjs"],
+            "states": ["widgets/pfsense-client-security/test/widget.test.mjs"],
+            "responsive": ["widgets/pfsense-client-security/test/widget.test.mjs"],
+            "themes": ["widgets/pfsense-client-security/test/widget.test.mjs"],
+            "accessibility": ["widgets/pfsense-client-security/test/widget.test.mjs"],
+            "save-reload": ["core-profile:sandbox-host-v1/save-reload"],
+            "performance": ["core-profile:sandbox-host-v1/performance"]
+          }
+        },
         "host_bridge": {
           "protocol": "piphi.widget.host",
           "version": "1",
