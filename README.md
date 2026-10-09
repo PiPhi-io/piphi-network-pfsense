@@ -54,7 +54,7 @@ pdm run python scripts/validate.py
 pdm run uvicorn piphi_network_pfsense.main:app --reload --port 8090
 ```
 
-The development group includes `piphi-runtime-testkit-python==0.1.3`. Its
+The development group includes `piphi-runtime-testkit-python==0.1.4`. Its
 end-to-end test starts a loopback mock PiPhi Core, configures the runtime with
 TestKit payload builders, validates `/entities`, and captures outbound telemetry
 and transition events.
