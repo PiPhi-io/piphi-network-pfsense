@@ -73,3 +73,11 @@ def test_release_keeps_assets_in_one_job_without_actions_artifact_handoff() -> N
     assert "actions/upload-artifact" not in workflow
     assert "actions/download-artifact" not in workflow
     assert 'gh release create "${RELEASE_REF}" release/*' in workflow
+
+
+def test_release_uses_the_scoped_docker_organization_token() -> None:
+    workflow = RELEASE_WORKFLOW.read_text()
+
+    assert "username: piphinetwork" in workflow
+    assert "password: ${{ secrets.DOCKERHUB_TOKEN }}" in workflow
+    assert "DOCKERHUB_OIDC_CONNECTIONID" not in workflow

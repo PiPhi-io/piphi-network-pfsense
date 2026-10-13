@@ -92,12 +92,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Log in to Docker Hub with OIDC
+      - name: Log in to Docker Hub with organization token
         uses: docker/login-action@v4
-        env:
-          DOCKERHUB_OIDC_CONNECTIONID: ${{ vars.DOCKERHUB_OIDC_CONNECTIONID }}
         with:
           username: piphinetwork
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Generate image metadata
         id: metadata
