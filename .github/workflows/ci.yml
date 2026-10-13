@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, self-hosted-machine-1]
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
@@ -27,6 +27,8 @@ jobs:
           node-version: "22"
       - run: npm ci --ignore-scripts
         working-directory: widgets/pfsense-overview
+      - run: npm audit --omit=dev
+        working-directory: widgets/pfsense-overview
       - run: npm test
         working-directory: widgets/pfsense-overview
       - run: npm run validate
@@ -34,6 +36,8 @@ jobs:
       - run: npm run conformance
         working-directory: widgets/pfsense-overview
       - run: npm ci --ignore-scripts
+        working-directory: widgets/pfsense-client-security
+      - run: npm audit --omit=dev
         working-directory: widgets/pfsense-client-security
       - run: npm test
         working-directory: widgets/pfsense-client-security

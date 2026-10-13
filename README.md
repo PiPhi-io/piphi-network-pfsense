@@ -144,7 +144,7 @@ access.
 ## Container
 
 ```bash
-docker build -t piphinetwork/piphi-network-pfsense:0.1.3 .
+docker build -t piphinetwork/piphi-network-pfsense:0.1.8 .
 ```
 
 The container does not require host networking, privileged mode, or access to

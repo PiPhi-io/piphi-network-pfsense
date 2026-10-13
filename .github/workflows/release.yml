@@ -17,11 +17,14 @@ env:
   RELEASE_REF: ${{ inputs.release_ref }}
 
 jobs:
-  verify-and-package:
-    name: Verify and package
-    runs-on: ubuntu-latest
+  release:
+    name: Verify, publish, and release
+    runs-on: [self-hosted, Linux, X64, self-hosted-machine-1]
     permissions:
-      contents: read
+      contents: write
+      attestations: write
+      artifact-metadata: write
+      id-token: write
     steps:
       - name: Check out release tag
         uses: actions/checkout@v6
@@ -61,6 +64,7 @@ jobs:
         run: |
           for widget in pfsense-overview pfsense-client-security; do
             npm ci --ignore-scripts --prefix "widgets/${widget}"
+            npm audit --omit=dev --prefix "widgets/${widget}"
             npm test --prefix "widgets/${widget}"
             npm run validate --prefix "widgets/${widget}"
             npm run conformance --prefix "widgets/${widget}"
@@ -81,30 +85,6 @@ jobs:
             manifest.json schema src widgets Dockerfile pyproject.toml pdm.lock README.md docs examples
           cd release
           sha256sum *.whl *.tar.gz > SHA256SUMS
-
-      - name: Upload release assets
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-assets
-          path: release/
-          if-no-files-found: error
-          retention-days: 14
-
-  publish-container:
-    name: Publish multi-platform container
-    needs: verify-and-package
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      attestations: write
-      artifact-metadata: write
-      id-token: write
-    steps:
-      - name: Check out release tag
-        uses: actions/checkout@v6
-        with:
-          ref: refs/tags/${{ env.RELEASE_REF }}
-          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -147,19 +127,6 @@ jobs:
           subject-name: ${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
-
-  publish-release:
-    name: Publish GitHub Release
-    needs: [verify-and-package, publish-container]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Download release assets
-        uses: actions/download-artifact@v4
-        with:
-          name: release-assets
-          path: release
 
       - name: Create GitHub Release
         env:
