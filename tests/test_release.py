@@ -54,6 +54,13 @@ def test_linux_workflows_use_the_dedicated_self_hosted_runner() -> None:
     assert "ubuntu-latest" not in RELEASE_WORKFLOW.read_text()
 
 
+def test_ci_avoids_duplicate_feature_branch_push_runs() -> None:
+    workflow = CI_WORKFLOW.read_text()
+
+    assert "pull_request:" in workflow
+    assert "push:\n    branches: [main]" in workflow
+
+
 def test_widget_production_dependencies_are_audited_in_ci_and_release() -> None:
     assert CI_WORKFLOW.read_text().count("npm audit --omit=dev") == 2
     assert "npm audit --omit=dev --prefix" in RELEASE_WORKFLOW.read_text()
