@@ -46,4 +46,8 @@ jobs:
         working-directory: widgets/pfsense-client-security
       - run: npm run conformance
         working-directory: widgets/pfsense-client-security
-      - run: docker build -t piphi-runtime-smoke .
+      - name: Diagnose and run container smoke build
+        run: |
+          df -h
+          docker system df
+          docker build --progress=plain -t piphi-runtime-smoke .
