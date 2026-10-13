@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CHECK_RELEASE = ROOT / "scripts" / "check_release.py"
 RELEASE_WORKFLOW = ROOT / ".github/workflows/release.yml"
+CI_WORKFLOW = ROOT / ".github/workflows/ci.yml"
 
 
 def test_current_release_metadata_is_consistent() -> None:
@@ -42,3 +43,33 @@ def test_release_dispatch_runs_from_main_but_builds_the_tag() -> None:
     assert "ref: refs/tags/${{ env.RELEASE_REF }}" in workflow
     assert 'pdm run python scripts/check_release.py "${RELEASE_REF}"' in workflow
     assert "artifact-metadata: write" in workflow
+
+
+def test_linux_workflows_use_the_dedicated_self_hosted_runner() -> None:
+    expected_runner = "[self-hosted, Linux, X64, self-hosted-machine-1]"
+
+    assert expected_runner in CI_WORKFLOW.read_text()
+    assert expected_runner in RELEASE_WORKFLOW.read_text()
+    assert "ubuntu-latest" not in CI_WORKFLOW.read_text()
+    assert "ubuntu-latest" not in RELEASE_WORKFLOW.read_text()
+
+
+def test_ci_avoids_duplicate_feature_branch_push_runs() -> None:
+    workflow = CI_WORKFLOW.read_text()
+
+    assert "pull_request:" in workflow
+    assert "push:\n    branches: [main]" in workflow
+
+
+def test_widget_production_dependencies_are_audited_in_ci_and_release() -> None:
+    assert CI_WORKFLOW.read_text().count("npm audit --omit=dev") == 2
+    assert "npm audit --omit=dev --prefix" in RELEASE_WORKFLOW.read_text()
+
+
+def test_release_keeps_assets_in_one_job_without_actions_artifact_handoff() -> None:
+    workflow = RELEASE_WORKFLOW.read_text()
+
+    assert "name: Verify, publish, and release" in workflow
+    assert "actions/upload-artifact" not in workflow
+    assert "actions/download-artifact" not in workflow
+    assert 'gh release create "${RELEASE_REF}" release/*' in workflow
