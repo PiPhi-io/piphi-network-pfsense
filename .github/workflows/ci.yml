@@ -46,4 +46,10 @@ jobs:
         working-directory: widgets/pfsense-client-security
       - run: npm run conformance
         working-directory: widgets/pfsense-client-security
+      - name: Log in to Docker Hub for trusted smoke builds
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: docker/login-action@v4
+        with:
+          username: piphinetwork
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - run: docker build -t piphi-runtime-smoke .

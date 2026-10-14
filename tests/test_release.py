@@ -73,3 +73,18 @@ def test_release_keeps_assets_in_one_job_without_actions_artifact_handoff() -> N
     assert "actions/upload-artifact" not in workflow
     assert "actions/download-artifact" not in workflow
     assert 'gh release create "${RELEASE_REF}" release/*' in workflow
+
+
+def test_trusted_ci_and_release_use_the_scoped_docker_organization_token() -> None:
+    release_workflow = RELEASE_WORKFLOW.read_text()
+    ci_workflow = CI_WORKFLOW.read_text()
+
+    assert "username: piphinetwork" in release_workflow
+    assert "password: ${{ secrets.DOCKERHUB_TOKEN }}" in release_workflow
+    assert "DOCKERHUB_OIDC_CONNECTIONID" not in release_workflow
+    assert (
+        "github.event.pull_request.head.repo.full_name == github.repository"
+        in ci_workflow
+    )
+    assert "username: piphinetwork" in ci_workflow
+    assert "password: ${{ secrets.DOCKERHUB_TOKEN }}" in ci_workflow
