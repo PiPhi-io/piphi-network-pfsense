@@ -128,11 +128,10 @@ jobs:
           push-to-registry: true
 
       - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          gh release create "${RELEASE_REF}" release/* \
-            --verify-tag \
-            --generate-notes \
-            --title "PiPhi Network pfSense ${RELEASE_REF}"
+        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
+        with:
+          tag_name: ${{ env.RELEASE_REF }}
+          name: PiPhi Network pfSense ${{ env.RELEASE_REF }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: release/*
