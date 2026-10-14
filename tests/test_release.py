@@ -72,7 +72,14 @@ def test_release_keeps_assets_in_one_job_without_actions_artifact_handoff() -> N
     assert "name: Verify, publish, and release" in workflow
     assert "actions/upload-artifact" not in workflow
     assert "actions/download-artifact" not in workflow
-    assert 'gh release create "${RELEASE_REF}" release/*' in workflow
+    assert (
+        "softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe"
+        in workflow
+    )
+    assert "tag_name: ${{ env.RELEASE_REF }}" in workflow
+    assert "fail_on_unmatched_files: true" in workflow
+    assert "files: release/*" in workflow
+    assert "gh release create" not in workflow
 
 
 def test_trusted_ci_and_release_use_the_scoped_docker_organization_token() -> None:
