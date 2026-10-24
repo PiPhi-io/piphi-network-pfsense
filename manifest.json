@@ -449,5 +449,8 @@
         }
       }
     ]
+  },
+  "onboarding": {
+    "mode": "manual"
   }
 }
